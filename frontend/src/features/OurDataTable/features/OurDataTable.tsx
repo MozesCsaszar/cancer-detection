@@ -8,6 +8,7 @@ import {
   TableCell,
   TableContainer,
   TablePagination,
+  Pagination,
   Paper,
   TableSortLabel,
 } from "@mui/material";
@@ -32,15 +33,19 @@ export const OurDataTable: React.FC<OurDataTableProps> = ({ data }) => {
 
   // Pagination state
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
+
+  const totalPages = Math.ceil(data.length / rowsPerPage);
 
   // Columns (dynamic)
   const columns = useMemo<ColumnDef<CsvRow>[]>(
     () =>
-      Object.keys(data[0]).map((key) => ({
-        accessorKey: key,
-        header: startCase(key),
-      })),
+      Object.keys(data[0])
+        .map((key) => ({
+          accessorKey: key,
+          header: startCase(key),
+        }))
+        .slice(1),
     [data]
   );
 
@@ -60,10 +65,16 @@ export const OurDataTable: React.FC<OurDataTableProps> = ({ data }) => {
     .rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
-    <Paper>
-      <TableContainer>
+    <Paper
+      sx={{
+        width: "100%",
+        height: "100%",
+        position: "relative",
+      }}
+    >
+      <TableContainer sx={{ maxHeight: "100vh" }}>
         <Table stickyHeader>
-          <TableHead>
+          <TableHead sx={{ position: "sticky", top: "0" }}>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -73,7 +84,9 @@ export const OurDataTable: React.FC<OurDataTableProps> = ({ data }) => {
                       backgroundColor: "primary.main",
                       color: "white",
                       fontWeight: "bold",
-                      paddingX: "0.5rem",
+                      paddingX: "0",
+                      textAlign: "center",
+                      fontSize: "1rem",
                     }}
                   >
                     {header.isPlaceholder ? null : (
@@ -84,7 +97,10 @@ export const OurDataTable: React.FC<OurDataTableProps> = ({ data }) => {
                             ? "desc"
                             : "asc"
                         }
-                        sx={{ color: "white", marginLeft: "1.5rem" }}
+                        sx={{
+                          color: "white",
+                          marginLeft: "1.5rem",
+                        }}
                         onClick={header.column.getToggleSortingHandler()}
                       >
                         {flexRender(
@@ -101,39 +117,70 @@ export const OurDataTable: React.FC<OurDataTableProps> = ({ data }) => {
           <TableBody>
             {paginatedRows.map((row, rowIndex) => (
               <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    key={cell.id}
-                    sx={{
-                      backgroundColor:
-                        rowIndex % 2 === 0
-                          ? "action.hover"
-                          : "background.paper",
-                      textAlign: "center",
-                    }}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+                {row.getVisibleCells().map((cell, cellIndex) => {
+                  return cellIndex < 3 && rowIndex % 2 === 1 ? null : (
+                    <TableCell
+                      key={cell.id}
+                      rowSpan={cellIndex < 3 ? 2 : 1}
+                      sx={{
+                        backgroundColor:
+                          rowIndex % 2 === 1
+                            ? "action.hover"
+                            : "background.paper",
+                        textAlign: "center",
+                        paddingX: "0",
+                      }}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  );
+                })}
               </TableRow>
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
 
-      {/* Pagination Controls */}
-      <TablePagination
-        component="div"
-        count={table.getRowModel().rows.length}
-        page={page}
-        onPageChange={(_, newPage) => setPage(newPage)}
-        rowsPerPage={rowsPerPage}
-        onRowsPerPageChange={(event) => {
-          setRowsPerPage(parseInt(event.target.value, 10));
-          setPage(0);
-        }}
-        rowsPerPageOptions={[10, 15, 25, 50]}
-      />
+        {/* Pagination Controls */}
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "end",
+            alignContent: "center",
+            marginRight: "2rem",
+            gap: "2rem",
+            position: "sticky",
+            bottom: "0",
+            backgroundColor: "white",
+          }}
+        >
+          <TablePagination
+            component="div"
+            count={table.getRowModel().rows.length / 2}
+            page={page}
+            onPageChange={(_, newPage) => setPage(newPage)}
+            rowsPerPage={rowsPerPage / 2}
+            onRowsPerPageChange={(event) => {
+              setRowsPerPage(parseInt(event.target.value, 10) * 2);
+              setPage(0);
+            }}
+            rowsPerPageOptions={[5, 10, 15, 25]}
+            backIconButtonProps={{ style: { display: "none" } }}
+            nextIconButtonProps={{ style: { display: "none" } }}
+          />
+
+          <Pagination
+            sx={{ display: "flex", alignContent: "center" }}
+            count={totalPages}
+            page={page + 1}
+            onChange={(_, value) => setPage(value - 1)}
+            color="primary"
+          />
+        </div>
+      </TableContainer>
     </Paper>
   );
 };

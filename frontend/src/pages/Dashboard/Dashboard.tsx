@@ -8,7 +8,15 @@ export const Dashboard: React.FC = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        minWidth: "100vw",
+        minHeight: "100vh",
+      }}
+    >
       <OurDataTable data={data} />
     </div>
   );
