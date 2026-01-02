@@ -1,43 +1,31 @@
 // src/hooks/useCsvData.ts
 import { useEffect, useState } from "react";
-import Papa from "papaparse";
+import { type DataEntry } from "../model/entries";
+import API from "../api/entries";
 
-export interface CsvRow {
-  index: number;
-  ID: number;
-  sampleType: string;
-  stage: string;
-  target: string;
-  concentration: number;
-  CI: number;
-  partitionsValid: number;
-  partitionsPositive: number;
-  partitionsNegative: number;
-  threshold: number;
-}
-
-export function useCsvData(filePath: string) {
-  const [data, setData] = useState<CsvRow[]>([]);
+export function useData() {
+  const [data, setData] = useState<DataEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setLoading(true);
-    Papa.parse<CsvRow>(filePath, {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      dynamicTyping: true,
-      complete: (results) => {
-        setData(results.data);
+    API.getData()
+      .then(([data, error]) => {
+        if (error === "") {
+          setData(data);
+        } else {
+          setError(error);
+        }
         setLoading(false);
-      },
-      error: (err) => {
-        setError(err.message);
-        setLoading(false);
-      },
-    });
-  }, [filePath]);
+      })
+      // Catch the unknown error and console log it
+      .catch((error) => {
+        const errorMsg = `Unknown error: ${error}`;
+        console.error(errorMsg);
+        setError(errorMsg);
+      });
+  }, []);
 
   return { data, loading, error };
 }

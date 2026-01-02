@@ -1,9 +1,9 @@
 import React from "react";
-import { useCsvData } from "../../hooks/useCsvData";
+import { useData } from "../../hooks/useCsvData";
 import { OurDataTable } from "../../features/OurDataTable/features/OurDataTable";
 
 export const Dashboard: React.FC = () => {
-  const { data, loading, error } = useCsvData("/OurDataClean.csv");
+  const { data, loading, error } = useData();
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
