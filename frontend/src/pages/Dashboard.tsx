@@ -1,6 +1,6 @@
 import React from "react";
 import { DataTable } from "../features/DataTable";
-import { useAsyncData } from "../hooks/useCsvData";
+import { useAsyncData } from "../hooks/useAsyncData";
 
 export const Dashboard: React.FC = () => {
   const { data, loading, error } = useAsyncData();
