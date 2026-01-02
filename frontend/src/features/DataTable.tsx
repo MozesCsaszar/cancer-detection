@@ -21,13 +21,13 @@ import {
   type SortingState,
 } from "@tanstack/react-table";
 import { startCase } from "lodash";
-import type { DataEntry } from "../../model/entries";
+import type { DataEntry } from "../model/entries";
 
-interface OurDataTableProps {
+interface DataTableProps {
   data: DataEntry[];
 }
 
-export const OurDataTable: React.FC<OurDataTableProps> = ({ data }) => {
+export const DataTable: React.FC<DataTableProps> = ({ data }) => {
   // Sorting state
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -36,7 +36,6 @@ export const OurDataTable: React.FC<OurDataTableProps> = ({ data }) => {
   const [rowsPerPage, setRowsPerPage] = useState(20);
 
   const totalPages = Math.ceil(data.length / rowsPerPage);
-  console.log("HER3");
 
   // Columns (dynamic)
   const columns = useMemo<ColumnDef<DataEntry>[]>(
@@ -50,8 +49,6 @@ export const OurDataTable: React.FC<OurDataTableProps> = ({ data }) => {
     [data]
   );
 
-  console.log("HER2");
-
   // Table instance
   const table = useReactTable({
     data,
@@ -62,14 +59,10 @@ export const OurDataTable: React.FC<OurDataTableProps> = ({ data }) => {
     getSortedRowModel: getSortedRowModel(),
   });
 
-  console.log("HER1");
-
   // Handle pagination
   const paginatedRows = table
     .getRowModel()
     .rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
-  console.log("HER");
 
   return (
     <Paper

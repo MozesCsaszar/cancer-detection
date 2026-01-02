@@ -1,6 +1,6 @@
 import React from "react";
-import { OurDataTable } from "../../features/OurDataTable/OurDataTable";
-import { useData } from "../../hooks/useCsvData";
+import { DataTable } from "../features/DataTable";
+import { useData } from "../hooks/useCsvData";
 
 export const Dashboard: React.FC = () => {
   const { data, loading, error } = useData();
@@ -19,7 +19,7 @@ export const Dashboard: React.FC = () => {
         minHeight: "100vh",
       }}
     >
-      <OurDataTable data={data} />
+      <DataTable data={data} />
     </div>
   );
 };
