@@ -1,6 +1,6 @@
 import { Box, Stack } from "@mui/material";
 import "./App.css";
-import NavigationBar from "./features/NavigationBar";
+import NavigationBar from "./features/NavigationBar/NavigationBar";
 import { DataCenter } from "./pages/DataCenter";
 import { Route, Routes } from "react-router";
 import { Home } from "./pages/Home";
