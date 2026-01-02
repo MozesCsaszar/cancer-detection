@@ -6,7 +6,7 @@ import API from "../api/entries";
 export function useData() {
   const [data, setData] = useState<DataEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     setLoading(true);

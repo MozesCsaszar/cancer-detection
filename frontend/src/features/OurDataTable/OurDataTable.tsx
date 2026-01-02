@@ -20,11 +20,11 @@ import {
   flexRender,
   type SortingState,
 } from "@tanstack/react-table";
-import { type CsvRow } from "../../../hooks/useCsvData";
 import { startCase } from "lodash";
+import type { DataEntry } from "../../model/entries";
 
 interface OurDataTableProps {
-  data: CsvRow[];
+  data: DataEntry[];
 }
 
 export const OurDataTable: React.FC<OurDataTableProps> = ({ data }) => {
@@ -36,9 +36,10 @@ export const OurDataTable: React.FC<OurDataTableProps> = ({ data }) => {
   const [rowsPerPage, setRowsPerPage] = useState(20);
 
   const totalPages = Math.ceil(data.length / rowsPerPage);
+  console.log("HER3");
 
   // Columns (dynamic)
-  const columns = useMemo<ColumnDef<CsvRow>[]>(
+  const columns = useMemo<ColumnDef<DataEntry>[]>(
     () =>
       Object.keys(data[0])
         .map((key) => ({
@@ -48,6 +49,8 @@ export const OurDataTable: React.FC<OurDataTableProps> = ({ data }) => {
         .slice(1),
     [data]
   );
+
+  console.log("HER2");
 
   // Table instance
   const table = useReactTable({
@@ -59,10 +62,14 @@ export const OurDataTable: React.FC<OurDataTableProps> = ({ data }) => {
     getSortedRowModel: getSortedRowModel(),
   });
 
+  console.log("HER1");
+
   // Handle pagination
   const paginatedRows = table
     .getRowModel()
     .rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
+  console.log("HER");
 
   return (
     <Paper

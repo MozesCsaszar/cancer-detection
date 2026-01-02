@@ -1,11 +1,13 @@
 import React from "react";
+import { OurDataTable } from "../../features/OurDataTable/OurDataTable";
 import { useData } from "../../hooks/useCsvData";
-import { OurDataTable } from "../../features/OurDataTable/features/OurDataTable";
 
 export const Dashboard: React.FC = () => {
   const { data, loading, error } = useData();
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (error !== "") return <p>Error: {error}</p>;
+
+  console.log(data);
 
   return (
     <div
