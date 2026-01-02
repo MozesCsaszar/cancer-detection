@@ -2,17 +2,19 @@ import { type FC } from "react";
 import Button from "@mui/material/Button";
 import { NavLink } from "react-router-dom";
 import { Box, Stack } from "@mui/material";
+import { type ButtonProps } from "@mui/material/Button";
 
 interface NavigationBarProps {}
 
-const borderWidth = 2;
+const borderWidth = 3;
 
-const buttonProps = {
+const buttonProps: ButtonProps = {
   variant: "contained",
   disableElevation: true,
   sx: {
     borderRadius: 0,
     borderBottom: `${borderWidth}px solid black`,
+    textAlign: "center",
     "&.active": {
       color: "black",
       borderBottomColor: "purple",
@@ -37,7 +39,7 @@ const NavigationBar: FC<NavigationBarProps> = () => (
         Home
       </Button>
       <Button component={NavLink} to="/data" {...buttonProps}>
-        Data View
+        Data View Center
       </Button>
       <Button component={NavLink} to="/dashboard" {...buttonProps}>
         Dashboard
@@ -51,8 +53,9 @@ const NavigationBar: FC<NavigationBarProps> = () => (
       sx={{
         borderBottom: `${borderWidth}px solid black`,
         position: "relative",
-        top: `-${borderWidth / 2}px`,
-        marginBottom: `-${borderWidth / 2}px`,
+        top: `-${borderWidth - 0.5}px`,
+        marginBottom: `-${borderWidth - 0.5}px`,
+        height: "0",
       }}
     ></Box>
   </Stack>

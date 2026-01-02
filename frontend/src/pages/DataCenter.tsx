@@ -14,8 +14,6 @@ export const DataCenter: React.FC = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        minWidth: "100vw",
-        minHeight: "100%",
       }}
     >
       <DataTable data={data} />
