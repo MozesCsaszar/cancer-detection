@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { type DataEntry } from "../model/entries";
 import API from "../api/entries";
 
-export function useData() {
+export function useAsyncData() {
   const [data, setData] = useState<DataEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");

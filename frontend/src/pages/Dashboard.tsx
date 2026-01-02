@@ -1,9 +1,9 @@
 import React from "react";
 import { DataTable } from "../features/DataTable";
-import { useData } from "../hooks/useCsvData";
+import { useAsyncData } from "../hooks/useCsvData";
 
 export const Dashboard: React.FC = () => {
-  const { data, loading, error } = useData();
+  const { data, loading, error } = useAsyncData();
   if (loading) return <p>Loading...</p>;
   if (error !== "") return <p>Error: {error}</p>;
 
