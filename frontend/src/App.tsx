@@ -9,7 +9,7 @@ function App() {
   return (
     <Stack sx={{ height: "100vh", width: "100vw" }}>
       <NavigationBar />
-      <Box sx={{ flex: 1 }}>
+      <Box sx={{ flex: 1, minHeight: 0 }}>
         <Routes>
           <Route index element={<Home />}></Route>
           <Route path="/data" element={<DataCenter />}></Route>

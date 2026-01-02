@@ -11,6 +11,7 @@ import {
   Pagination,
   Paper,
   TableSortLabel,
+  Box,
 } from "@mui/material";
 import {
   useReactTable,
@@ -72,7 +73,7 @@ export const DataTable: React.FC<DataTableProps> = ({ data }) => {
         position: "relative",
       }}
     >
-      <TableContainer sx={{ maxHeight: "100vh" }}>
+      <TableContainer sx={{ maxHeight: "100%" }}>
         <Table stickyHeader>
           <TableHead sx={{ position: "sticky", top: "0" }}>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -145,12 +146,11 @@ export const DataTable: React.FC<DataTableProps> = ({ data }) => {
 
         {/* Pagination Controls */}
 
-        <div
-          style={{
+        <Box
+          sx={{
             display: "flex",
-            justifyContent: "end",
+            justifyContent: "center",
             alignContent: "center",
-            marginRight: "2rem",
             gap: "2rem",
             position: "sticky",
             bottom: "0",
@@ -179,7 +179,7 @@ export const DataTable: React.FC<DataTableProps> = ({ data }) => {
             onChange={(_, value) => setPage(value - 1)}
             color="primary"
           />
-        </div>
+        </Box>
       </TableContainer>
     </Paper>
   );
