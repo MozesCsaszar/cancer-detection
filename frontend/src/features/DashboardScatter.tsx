@@ -69,8 +69,8 @@ const DashboardScatter: FC<DashboardScatterProps> = ({
   return (
     <VictoryChart domainPadding={0.015} theme={VictoryTheme.clean} scale="log">
       <VictoryLabel
-        text={`Scatter Plot of ${xVar}  to ${yVar} Values`}
-        x={120}
+        text={`${xVar}  to ${yVar} Values`}
+        x={50}
         y={30}
       ></VictoryLabel>
       {/* X Axis */}

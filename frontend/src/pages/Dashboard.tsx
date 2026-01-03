@@ -21,6 +21,9 @@ export const Dashboard: React.FC = () => {
   return (
     <Box
       style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
         height: "100%",
       }}
     >
@@ -28,11 +31,11 @@ export const Dashboard: React.FC = () => {
         loading={loading}
         error={error}
         createComponent={() => (
-          <Stack sx={{ flex: 1, minHeight: 0 }}>
+          <Stack sx={{ flex: 1, minHeight: 0, height: "100%" }}>
             {/* Top row with boxplots */}
             <Box sx={{ display: "flex", flex: 1 }}>
               {/* Inputs */}
-              <Box sx={{ flex: 1 }}>
+              <Stack sx={{ justifyContent: "center", flex: 1 }}>
                 <DashboardTargetSelect
                   title="Select Boxplot Variables"
                   target={target}
@@ -40,7 +43,7 @@ export const Dashboard: React.FC = () => {
                   targetVariable={targetVariable}
                   setTargetVariable={setTargetVariable}
                 ></DashboardTargetSelect>
-              </Box>
+              </Stack>
 
               {/* Three boxplots */}
               <Box sx={{ display: "flex", flex: 4 }}>
@@ -65,7 +68,7 @@ export const Dashboard: React.FC = () => {
               </Box>
             </Box>
             {/* Bottom row with scatterplot */}
-            <Box sx={{ display: "flex", flex: 2 }}>
+            <Box sx={{ display: "flex", flex: 2, minHeight: 0 }}>
               {/* Inputs */}
               <Stack sx={{ flex: 1, gap: "2rem", justifyContent: "center" }}>
                 <DashboardTargetSelect
@@ -83,7 +86,7 @@ export const Dashboard: React.FC = () => {
                   setTargetVariable={setTargetVariableY}
                 ></DashboardTargetSelect>
               </Stack>
-              <Box sx={{ display: "flex", flex: 4 }}>
+              <Box sx={{ height: "100%", display: "flex", flex: 4 }}>
                 {/* Scatterplot */}
                 <Box sx={{ flex: 2 }}>
                   <DashboardScatter
@@ -96,17 +99,22 @@ export const Dashboard: React.FC = () => {
                 </Box>
 
                 {/* Histograms */}
-                <Stack sx={{ flex: 1 }}>
-                  <DashboardHistogram
-                    data={data}
-                    target={targetX}
-                    targetVariable={targetVariableX}
-                  ></DashboardHistogram>
-                  <DashboardHistogram
-                    data={data}
-                    target={targetY}
-                    targetVariable={targetVariableY}
-                  ></DashboardHistogram>
+                <Stack sx={{ justifyContent: "center", flex: 1, minHeight: 0 }}>
+                  <Box>
+                    <DashboardHistogram
+                      data={data}
+                      target={targetX}
+                      targetVariable={targetVariableX}
+                    ></DashboardHistogram>
+                  </Box>
+
+                  <Box sx={{ marginTop: "-4rem" }}>
+                    <DashboardHistogram
+                      data={data}
+                      target={targetY}
+                      targetVariable={targetVariableY}
+                    ></DashboardHistogram>
+                  </Box>
                 </Stack>
               </Box>
             </Box>
