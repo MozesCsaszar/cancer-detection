@@ -7,17 +7,24 @@ import {
   VictoryLabel,
   VictoryAxis,
 } from "victory";
+import { startCase } from "lodash";
+import type {
+  DashboardTargetType,
+  DashboardTargetVariableType,
+} from "../model/dashboard";
 
 type DashboardBoxplotProps = {
   data: DataEntry[];
   boxOneStage: "Early" | "Late" | "Any";
-  target?: "B2M" | "TP53";
+  target?: DashboardTargetType;
+  targetVariable: DashboardTargetVariableType;
 };
 
 const DashboardBoxplot: FC<DashboardBoxplotProps> = ({
   data,
   boxOneStage,
   target = "B2M",
+  targetVariable = "concentration",
 }) => {
   const boxOneFilterFunction = (row: DataEntry) => {
     if (boxOneStage === "Any") {
@@ -26,17 +33,42 @@ const DashboardBoxplot: FC<DashboardBoxplotProps> = ({
       return row.stage === boxOneStage;
     }
   };
+
+  const boxValues = [
+    {
+      x: `${boxOneStage} Stage Patient`,
+      y: data
+        .filter((row) => boxOneFilterFunction(row) && row.target === target)
+        // add 1 for logarithmic scale
+        .map((row) => row[targetVariable] + 1),
+    },
+    {
+      x: "Control",
+      y: data
+        .filter((row) => row.sampleType === "Control" && row.target === target)
+        .map((row) => row[targetVariable] + 1),
+    },
+  ];
+
+  // const minValue = Math.min(
+  //   Math.min(...boxValues[0].y),
+  //   Math.min(...boxValues[1].y)
+  // );
+
+  // const minExponent = Math.log10(minValue);
+
   return (
     <VictoryChart
-      minDomain={{ y: 0.7 }}
       scale={{ y: "log" }}
       domainPadding={{ x: 100 }}
       theme={VictoryTheme.clean}
     >
       {/* Title */}
       <VictoryLabel
-        text={`${target} Levels of ${boxOneStage} Stage Patients Vs Control`}
-        x={90}
+        text={`${target} ${startCase(
+          targetVariable
+        )} Levels of ${boxOneStage} Stage Patients Vs Control`}
+        x={35}
         y={35}
       ></VictoryLabel>
       {/* X Axis */}
@@ -56,25 +88,7 @@ const DashboardBoxplot: FC<DashboardBoxplotProps> = ({
         medianLabels={({ datum }) => Math.round(datum._median)}
         q3Labels={({ datum }) => Math.round(datum._q3)}
         maxLabels={({ datum }) => Math.round(datum._max)}
-        data={[
-          {
-            x: `${boxOneStage} Stage Patient`,
-            y: data
-              .filter(
-                (row) => boxOneFilterFunction(row) && row.target === target
-              )
-              // add 1 for logarithmic scale
-              .map((row) => row.concentration + 1),
-          },
-          {
-            x: "Control",
-            y: data
-              .filter(
-                (row) => row.sampleType === "Control" && row.target === target
-              )
-              .map((row) => row.concentration + 1),
-          },
-        ]}
+        data={boxValues}
       ></VictoryBoxPlot>
     </VictoryChart>
   );

@@ -7,26 +7,35 @@ import {
   VictoryLabel,
   VictoryAxis,
 } from "victory";
+import type {
+  DashboardTargetType,
+  DashboardTargetVariableType,
+} from "../model/dashboard";
+import { startCase } from "lodash";
 
 type DashboardHistogramProps = {
   data: DataEntry[];
-  target?: "B2M" | "TP53";
+  target: DashboardTargetType;
+  targetVariable: DashboardTargetVariableType;
 };
 
 const DashboardHistogram: FC<DashboardHistogramProps> = ({
   data,
   target = "B2M",
+  targetVariable,
 }) => {
+  const varName = `${target} ${startCase(targetVariable)}`;
+
   return (
     <VictoryChart theme={VictoryTheme.clean}>
       <VictoryLabel
-        text={`Frequency of ${target} Values`}
-        x={160}
+        text={`Frequency of ${varName} Values`}
+        x={100}
         y={45}
       ></VictoryLabel>
       {/* X Axis */}
       <VictoryAxis
-        label={`${target} Values`}
+        label={`${varName} Values`}
         axisLabelComponent={<VictoryLabel dy={-8}></VictoryLabel>}
       ></VictoryAxis>
       {/* Y Axis */}
@@ -38,7 +47,7 @@ const DashboardHistogram: FC<DashboardHistogramProps> = ({
       <VictoryHistogram
         data={data
           .filter((row) => row.target === target)
-          .map((row) => ({ x: row.concentration }))}
+          .map((row) => ({ x: row[targetVariable] }))}
       ></VictoryHistogram>
     </VictoryChart>
   );

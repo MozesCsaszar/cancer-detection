@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { useMemo, type FC } from "react";
 import type { DataEntry } from "../model/entries";
 import {
   VictoryChart,
@@ -8,54 +8,87 @@ import {
   VictoryAxis,
   VictoryTooltip,
 } from "victory";
+import {
+  dashboardTargetVariables,
+  type DashboardTargetType,
+  type DashboardTargetVariableType,
+} from "../model/dashboard";
+import { startCase } from "lodash";
 
 type DashboardScatterProps = {
   data: DataEntry[];
+  targetX: DashboardTargetType;
+  targetVariableX: DashboardTargetVariableType;
+  targetY: DashboardTargetType;
+  targetVariableY: DashboardTargetVariableType;
 };
 
-const DashboardScatter: FC<DashboardScatterProps> = ({ data }) => {
-  // store scatter data values
-  const scatterData = new Map<Number, { B2M: number; TP53: number }>();
-  // store all the unique ids
-  const ids = new Array(...new Set(data.map((row) => row.ID)));
+const DashboardScatter: FC<DashboardScatterProps> = ({
+  data,
+  targetX,
+  targetVariableX,
+  targetY,
+  targetVariableY,
+}) => {
+  const [scatterData, ids] = useMemo(() => {
+    // store scatter data values
+    const scatterData = new Map<
+      Number,
+      Map<DashboardTargetType, Map<DashboardTargetVariableType, number>>
+    >();
+    // store all the unique ids
+    const ids = new Array(...new Set(data.map((row) => row.ID)));
 
-  // extract the B2M and TP53 values
-  data.forEach((row) => {
-    if (!scatterData.get(row.ID)) {
-      scatterData.set(row.ID, { B2M: 0, TP53: 0 });
-    }
-    scatterData.get(row.ID)![row.target as "B2M" | "TP53"] = row.concentration;
-  });
+    // extract the B2M and TP53 target variables
+    data.forEach((row) => {
+      if (!scatterData.get(row.ID)) {
+        scatterData.set(row.ID, new Map());
+      }
+
+      scatterData.get(row.ID)?.set(row.target, new Map());
+
+      dashboardTargetVariables.forEach((targetVariable) => {
+        scatterData
+          .get(row.ID)
+          ?.get(row.target)
+          ?.set(targetVariable, row[targetVariable]);
+      });
+    });
+    return [scatterData, ids];
+  }, [data]);
 
   // rename them to x and y
   const displayData = ids.map((id) => ({
-    x: scatterData.get(id)!.B2M + 1,
-    y: scatterData.get(id)!.TP53 + 1,
+    x: scatterData.get(id)!.get(targetX)!.get(targetVariableX)! + 1,
+    y: scatterData.get(id)!.get(targetY)!.get(targetVariableY)! + 1,
   }));
+
+  const xVar = `${targetX} ${startCase(targetVariableX)}`;
+  const yVar = `${targetX} ${startCase(targetVariableX)}`;
 
   return (
     <VictoryChart domainPadding={0.015} theme={VictoryTheme.clean} scale="log">
       <VictoryLabel
-        text={`Scatter Plot of B2M to TP53 Values`}
+        text={`Scatter Plot of ${xVar}  to ${yVar} Values`}
         x={120}
         y={30}
       ></VictoryLabel>
       {/* X Axis */}
       <VictoryAxis
-        label={`log B2M + 1`}
+        label={`log ${xVar} + 1`}
         axisLabelComponent={<VictoryLabel dy={-8}></VictoryLabel>}
       ></VictoryAxis>
       {/* Y Axis */}
       <VictoryAxis
         dependentAxis
-        label={`log TP53 + 1`}
+        label={`log ${yVar} + 1`}
         axisLabelComponent={<VictoryLabel dx={0}></VictoryLabel>}
       ></VictoryAxis>
       <VictoryScatter
         size={3}
         data={displayData}
         labels={({ datum }) =>
-          `B2M: ${datum.x.toFixed(2)}\nTP53: ${datum.y.toFixed(2)}`
+          `${xVar}: ${datum.x.toFixed(2)}\n${yVar}: ${datum.y.toFixed(2)}`
         }
         labelComponent={<VictoryTooltip dy={-10} />}
       ></VictoryScatter>
