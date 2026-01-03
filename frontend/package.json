@@ -24,9 +24,10 @@
     "react-dom": "^19.2.0",
     "react-router": "^7.11.0",
     "react-router-dom": "^7.11.0",
-    "recharts": "^3.4.1",
+    "recharts": "^3.6.0",
     "socket.io-client": "^4.8.1",
-    "tailwindcss": "^4.1.17"
+    "tailwindcss": "^4.1.17",
+    "victory": "^37.3.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
@@ -37,6 +38,7 @@
     "@types/react-dom": "^19.2.2",
     "@types/react-router": "^5.1.20",
     "@types/react-router-dom": "^5.3.3",
+    "@types/victory": "^33.1.5",
     "@vitejs/plugin-react": "^5.1.0",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",

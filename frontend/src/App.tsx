@@ -4,6 +4,7 @@ import NavigationBar from "./features/NavigationBar/NavigationBar";
 import { DataCenter } from "./pages/DataCenter";
 import { Route, Routes } from "react-router";
 import { Home } from "./pages/Home";
+import { Dashboard } from "./pages/Dashboard";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route index element={<Home />}></Route>
           <Route path="/data" element={<DataCenter />}></Route>
+          <Route path="/dashboard" element={<Dashboard />}></Route>
         </Routes>
       </Box>
     </Stack>
