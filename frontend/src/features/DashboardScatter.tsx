@@ -63,32 +63,34 @@ const DashboardScatter: FC<DashboardScatterProps> = ({
     y: scatterData.get(id)!.get(targetY)!.get(targetVariableY)! + 1,
   }));
 
-  const xVar = `${targetX} ${startCase(targetVariableX)}`;
-  const yVar = `${targetX} ${startCase(targetVariableX)}`;
+  const xVarName = `${targetX} ${startCase(targetVariableX)}`;
+  const yVarName = `${targetY} ${startCase(targetVariableY)}`;
 
   return (
     <VictoryChart domainPadding={0.015} theme={VictoryTheme.clean} scale="log">
       <VictoryLabel
-        text={`${xVar}  to ${yVar} Values`}
+        text={`${xVarName}  to ${yVarName} Values`}
         x={50}
         y={30}
       ></VictoryLabel>
       {/* X Axis */}
       <VictoryAxis
-        label={`log ${xVar} + 1`}
+        label={`log ${xVarName} + 1`}
         axisLabelComponent={<VictoryLabel dy={-8}></VictoryLabel>}
       ></VictoryAxis>
       {/* Y Axis */}
       <VictoryAxis
         dependentAxis
-        label={`log ${yVar} + 1`}
+        label={`log ${yVarName} + 1`}
         axisLabelComponent={<VictoryLabel dx={0}></VictoryLabel>}
       ></VictoryAxis>
       <VictoryScatter
         size={3}
         data={displayData}
         labels={({ datum }) =>
-          `${xVar}: ${datum.x.toFixed(2)}\n${yVar}: ${datum.y.toFixed(2)}`
+          `${xVarName}: ${datum.x.toFixed(2)}\n${yVarName}: ${datum.y.toFixed(
+            2
+          )}`
         }
         labelComponent={<VictoryTooltip dy={-10} />}
       ></VictoryScatter>
