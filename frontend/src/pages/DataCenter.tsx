@@ -1,26 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { DataTable } from "../features/DataTable";
-import { useAsyncData } from "../hooks/useAsyncData";
-import { Box } from "@mui/material";
-import LoadingScreen from "../features/LoadingScreen/LoadingScreen";
+import { DataContext } from "../model/contexts";
 
 export const DataCenter: React.FC = () => {
-  const { data, loading, error } = useAsyncData();
+  const data = useContext(DataContext);
 
-  return (
-    <Box
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100%",
-      }}
-    >
-      <LoadingScreen
-        loading={loading}
-        error={error}
-        createComponent={() => <DataTable data={data} />}
-      ></LoadingScreen>
-    </Box>
-  );
+  return <DataTable data={data} />;
 };
