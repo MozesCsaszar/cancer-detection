@@ -1,7 +1,5 @@
 import React, { useContext } from "react";
-import { useAsyncData } from "../hooks/useAsyncData";
 import { Stack, Box } from "@mui/material";
-import LoadingScreen from "../features/LoadingScreen/LoadingScreen";
 
 import DashboardHistogram from "../features/DashboardHistogram";
 import DashboardScatter from "../features/DashboardScatter";

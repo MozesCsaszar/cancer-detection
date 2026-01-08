@@ -8,6 +8,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { useAsyncData } from "./hooks/useAsyncData";
 import LoadingScreen from "./features/LoadingScreen/LoadingScreen";
 import { DataContext } from "./model/contexts";
+import { AICenter } from "./pages/AICenter";
 
 function App() {
   const { data, loading, error } = useAsyncData();
@@ -21,7 +22,6 @@ function App() {
           alignItems: "center",
           justifyContent: "center",
           flex: 1,
-          // height: "100%",
           minHeight: 0,
         }}
       >
@@ -34,6 +34,7 @@ function App() {
                 <Route index element={<Home />}></Route>
                 <Route path="/data" element={<DataCenter />}></Route>
                 <Route path="/dashboard" element={<Dashboard />}></Route>
+                <Route path="/ai" element={<AICenter />}></Route>
               </Routes>
             </DataContext>
           )}

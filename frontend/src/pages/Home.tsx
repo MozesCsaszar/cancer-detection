@@ -17,7 +17,6 @@ export const Home: React.FC = () => {
       style={{
         alignItems: "center",
         justifyContent: "center",
-        height: "100%",
       }}
     >
       <Typography variant="h2" sx={{ marginBottom: "2rem" }}>
