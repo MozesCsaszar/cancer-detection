@@ -9,7 +9,6 @@ import {
   TableContainer,
   TablePagination,
   Pagination,
-  Paper,
   TableSortLabel,
   Box,
 } from "@mui/material";

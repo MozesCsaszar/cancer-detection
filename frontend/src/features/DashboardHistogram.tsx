@@ -7,10 +7,7 @@ import {
   VictoryLabel,
   VictoryAxis,
 } from "victory";
-import type {
-  DETargetType,
-  DENumericalVariablesType,
-} from "../model/dashboard";
+import type { DETargetType, DENumericalVariablesType } from "../model/entries";
 import { startCase } from "lodash";
 
 type DashboardHistogramProps = {

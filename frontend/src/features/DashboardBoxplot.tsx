@@ -8,10 +8,7 @@ import {
   VictoryAxis,
 } from "victory";
 import { startCase } from "lodash";
-import type {
-  DETargetType,
-  DENumericalVariablesType,
-} from "../model/dashboard";
+import type { DETargetType, DENumericalVariablesType } from "../model/entries";
 
 type DashboardBoxplotProps = {
   data: DataEntry[];
