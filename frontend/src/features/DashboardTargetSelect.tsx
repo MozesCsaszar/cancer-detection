@@ -9,17 +9,17 @@ import {
 } from "@mui/material";
 import { startCase } from "lodash";
 import {
-  dashboardTargetVariables,
+  deNumericalVariables,
   type DETargetType,
-  type DashboardTargetVariableType,
-} from "../model/dashboard";
+  type DENumericalVariablesType,
+} from "../model/entries";
 
 interface DashboardTargetSelectProps {
   title: string;
   target: DETargetType;
   setTarget: Dispatch<SetStateAction<DETargetType>>;
-  targetVariable: DashboardTargetVariableType;
-  setTargetVariable: Dispatch<SetStateAction<DashboardTargetVariableType>>;
+  targetVariable: DENumericalVariablesType;
+  setTargetVariable: Dispatch<SetStateAction<DENumericalVariablesType>>;
 }
 
 const DashboardTargetSelect: FC<DashboardTargetSelectProps> = ({
@@ -59,7 +59,7 @@ const DashboardTargetSelect: FC<DashboardTargetSelectProps> = ({
           value={targetVariable}
           label="Target Variable"
         >
-          {dashboardTargetVariables.map((variable) => (
+          {deNumericalVariables.map((variable) => (
             <MenuItem value={variable}>{startCase(variable)}</MenuItem>
           ))}
         </Select>

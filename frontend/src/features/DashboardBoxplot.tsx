@@ -10,14 +10,14 @@ import {
 import { startCase } from "lodash";
 import type {
   DETargetType,
-  DashboardTargetVariableType,
+  DENumericalVariablesType,
 } from "../model/dashboard";
 
 type DashboardBoxplotProps = {
   data: DataEntry[];
   boxOneStage: "Early" | "Late" | "Any";
   target?: DETargetType;
-  targetVariable: DashboardTargetVariableType;
+  targetVariable: DENumericalVariablesType;
 };
 
 const DashboardBoxplot: FC<DashboardBoxplotProps> = ({

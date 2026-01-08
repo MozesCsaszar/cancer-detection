@@ -2,7 +2,7 @@
 import { useState, type Dispatch, type SetStateAction } from "react";
 import type {
   DETargetType,
-  DashboardTargetVariableType,
+  DENumericalVariablesType,
 } from "../model/dashboard";
 
 export function useSelectTarget(
@@ -10,12 +10,12 @@ export function useSelectTarget(
 ): [
   DETargetType,
   Dispatch<SetStateAction<DETargetType>>,
-  DashboardTargetVariableType,
-  Dispatch<SetStateAction<DashboardTargetVariableType>>
+  DENumericalVariablesType,
+  Dispatch<SetStateAction<DENumericalVariablesType>>
 ] {
   const [target, setTarget] = useState<DETargetType>(defaultTarget);
   const [targetVariable, setTargetVariable] =
-    useState<DashboardTargetVariableType>("concentration");
+    useState<DENumericalVariablesType>("concentration");
 
   return [target, setTarget, targetVariable, setTargetVariable];
 }

@@ -9,17 +9,17 @@ import {
   VictoryTooltip,
 } from "victory";
 import {
-  dashboardTargetVariables,
-  type DashboardTargetVariableType,
-} from "../model/dashboard";
+  deNumericalVariables,
+  type DENumericalVariablesType,
+} from "../model/entries";
 import { startCase } from "lodash";
 
 type DashboardScatterProps = {
   data: DataEntry[];
   targetX: DETargetType;
-  targetVariableX: DashboardTargetVariableType;
+  targetVariableX: DENumericalVariablesType;
   targetY: DETargetType;
-  targetVariableY: DashboardTargetVariableType;
+  targetVariableY: DENumericalVariablesType;
 };
 
 const DashboardScatter: FC<DashboardScatterProps> = ({
@@ -33,7 +33,7 @@ const DashboardScatter: FC<DashboardScatterProps> = ({
     // store scatter data values
     const scatterData = new Map<
       Number,
-      Map<DETargetType, Map<DashboardTargetVariableType, number>>
+      Map<DETargetType, Map<DENumericalVariablesType, number>>
     >();
     // store all the unique ids
     const ids = new Array(...new Set(data.map((row) => row.ID)));
@@ -46,7 +46,7 @@ const DashboardScatter: FC<DashboardScatterProps> = ({
 
       scatterData.get(row.ID)?.set(row.target, new Map());
 
-      dashboardTargetVariables.forEach((targetVariable) => {
+      deNumericalVariables.forEach((targetVariable) => {
         scatterData
           .get(row.ID)
           ?.get(row.target)

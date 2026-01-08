@@ -16,3 +16,18 @@ export type DataEntry = {
   partitionsNegative: number;
   threshold: number;
 };
+
+export const deNumericalVariables = [
+  "concentration",
+  "partitionsNegative",
+  "partitionsPositive",
+  "partitionsValid",
+  "threshold",
+] as const;
+
+export type DENumericalVariablesType = (typeof deNumericalVariables)[number];
+
+export const deCategoricalVariables = ["sampleType", "stage", "target"];
+
+export type DECategoricalVariablesType =
+  (typeof deCategoricalVariables)[number];

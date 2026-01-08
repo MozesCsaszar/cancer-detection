@@ -9,14 +9,14 @@ import {
 } from "victory";
 import type {
   DETargetType,
-  DashboardTargetVariableType,
+  DENumericalVariablesType,
 } from "../model/dashboard";
 import { startCase } from "lodash";
 
 type DashboardHistogramProps = {
   data: DataEntry[];
   target: DETargetType;
-  targetVariable: DashboardTargetVariableType;
+  targetVariable: DENumericalVariablesType;
 };
 
 const DashboardHistogram: FC<DashboardHistogramProps> = ({
