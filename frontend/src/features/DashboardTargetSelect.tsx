@@ -10,14 +10,14 @@ import {
 import { startCase } from "lodash";
 import {
   dashboardTargetVariables,
-  type DashboardTargetType,
+  type DETargetType,
   type DashboardTargetVariableType,
 } from "../model/dashboard";
 
 interface DashboardTargetSelectProps {
   title: string;
-  target: DashboardTargetType;
-  setTarget: Dispatch<SetStateAction<DashboardTargetType>>;
+  target: DETargetType;
+  setTarget: Dispatch<SetStateAction<DETargetType>>;
   targetVariable: DashboardTargetVariableType;
   setTargetVariable: Dispatch<SetStateAction<DashboardTargetVariableType>>;
 }

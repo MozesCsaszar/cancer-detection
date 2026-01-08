@@ -1,7 +1,6 @@
-// src/hooks/useCsvData.ts
 import { useEffect, useState } from "react";
 import { type DataEntry } from "../model/entries";
-import API from "../api/entries";
+import API from "../api/csvAPI";
 
 export function useAsyncData() {
   const [data, setData] = useState<DataEntry[]>([]);
@@ -26,6 +25,8 @@ export function useAsyncData() {
         setError(errorMsg);
       });
   }, []);
+
+  console.log(data);
 
   return { data, loading, error };
 }

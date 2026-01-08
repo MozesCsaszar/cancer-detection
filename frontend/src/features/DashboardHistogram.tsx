@@ -8,14 +8,14 @@ import {
   VictoryAxis,
 } from "victory";
 import type {
-  DashboardTargetType,
+  DETargetType,
   DashboardTargetVariableType,
 } from "../model/dashboard";
 import { startCase } from "lodash";
 
 type DashboardHistogramProps = {
   data: DataEntry[];
-  target: DashboardTargetType;
+  target: DETargetType;
   targetVariable: DashboardTargetVariableType;
 };
 

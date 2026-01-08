@@ -1,19 +1,19 @@
 // src/hooks/useCsvData.ts
 import { useState, type Dispatch, type SetStateAction } from "react";
 import type {
-  DashboardTargetType,
+  DETargetType,
   DashboardTargetVariableType,
 } from "../model/dashboard";
 
 export function useSelectTarget(
-  defaultTarget: DashboardTargetType = "B2M"
+  defaultTarget: DETargetType = "B2M"
 ): [
-  DashboardTargetType,
-  Dispatch<SetStateAction<DashboardTargetType>>,
+  DETargetType,
+  Dispatch<SetStateAction<DETargetType>>,
   DashboardTargetVariableType,
   Dispatch<SetStateAction<DashboardTargetVariableType>>
 ] {
-  const [target, setTarget] = useState<DashboardTargetType>(defaultTarget);
+  const [target, setTarget] = useState<DETargetType>(defaultTarget);
   const [targetVariable, setTargetVariable] =
     useState<DashboardTargetVariableType>("concentration");
 

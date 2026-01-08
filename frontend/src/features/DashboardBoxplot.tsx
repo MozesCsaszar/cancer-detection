@@ -9,14 +9,14 @@ import {
 } from "victory";
 import { startCase } from "lodash";
 import type {
-  DashboardTargetType,
+  DETargetType,
   DashboardTargetVariableType,
 } from "../model/dashboard";
 
 type DashboardBoxplotProps = {
   data: DataEntry[];
   boxOneStage: "Early" | "Late" | "Any";
-  target?: DashboardTargetType;
+  target?: DETargetType;
   targetVariable: DashboardTargetVariableType;
 };
 

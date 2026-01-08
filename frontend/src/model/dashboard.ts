@@ -8,5 +8,3 @@ export const dashboardTargetVariables = [
 
 export type DashboardTargetVariableType =
   (typeof dashboardTargetVariables)[number];
-
-export type DashboardTargetType = "B2M" | "TP53";

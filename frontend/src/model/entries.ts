@@ -1,11 +1,14 @@
-import type { DashboardTargetType } from "./dashboard";
+export type DESampleType = "Patient" | "Control";
+export type DEStageType = "Early" | "Late" | "";
+// TODO: Maybe change this
+export type DETargetType = "B2M" | "TP53" | "PVT1";
 
 export type DataEntry = {
   index: number;
   ID: number;
-  sampleType: string;
-  stage: string;
-  target: DashboardTargetType;
+  sampleType: DESampleType;
+  stage: DEStageType;
+  target: DETargetType;
   concentration: number;
   CI: number;
   partitionsValid: number;

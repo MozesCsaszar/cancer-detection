@@ -30,7 +30,9 @@ interface DataTableProps {
 
 export const DataTable: React.FC<DataTableProps> = ({ data }) => {
   // Sorting state
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "ID", desc: false },
+  ]);
 
   // Pagination state
   const [page, setPage] = useState(0);
@@ -118,11 +120,10 @@ export const DataTable: React.FC<DataTableProps> = ({ data }) => {
           <TableBody>
             {paginatedRows.map((row, rowIndex) => (
               <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell, cellIndex) => {
-                  return cellIndex < 3 && rowIndex % 2 === 1 ? null : (
+                {row.getVisibleCells().map((cell) => {
+                  return (
                     <TableCell
                       key={cell.id}
-                      rowSpan={cellIndex < 3 ? 2 : 1}
                       sx={{
                         backgroundColor:
                           rowIndex % 2 === 1
@@ -159,15 +160,15 @@ export const DataTable: React.FC<DataTableProps> = ({ data }) => {
         >
           <TablePagination
             component="div"
-            count={table.getRowModel().rows.length / 2}
+            count={table.getRowModel().rows.length}
             page={page}
             onPageChange={(_, newPage) => setPage(newPage)}
-            rowsPerPage={rowsPerPage / 2}
+            rowsPerPage={rowsPerPage}
             onRowsPerPageChange={(event) => {
-              setRowsPerPage(parseInt(event.target.value, 10) * 2);
+              setRowsPerPage(parseInt(event.target.value, 10));
               setPage(0);
             }}
-            rowsPerPageOptions={[5, 10, 15, 25]}
+            rowsPerPageOptions={[10, 20, 30, 50]}
             backIconButtonProps={{ style: { display: "none" } }}
             nextIconButtonProps={{ style: { display: "none" } }}
           />

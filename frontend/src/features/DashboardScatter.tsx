@@ -1,5 +1,5 @@
 import { useMemo, type FC } from "react";
-import type { DataEntry } from "../model/entries";
+import type { DataEntry, DETargetType } from "../model/entries";
 import {
   VictoryChart,
   VictoryTheme,
@@ -10,16 +10,15 @@ import {
 } from "victory";
 import {
   dashboardTargetVariables,
-  type DashboardTargetType,
   type DashboardTargetVariableType,
 } from "../model/dashboard";
 import { startCase } from "lodash";
 
 type DashboardScatterProps = {
   data: DataEntry[];
-  targetX: DashboardTargetType;
+  targetX: DETargetType;
   targetVariableX: DashboardTargetVariableType;
-  targetY: DashboardTargetType;
+  targetY: DETargetType;
   targetVariableY: DashboardTargetVariableType;
 };
 
@@ -34,7 +33,7 @@ const DashboardScatter: FC<DashboardScatterProps> = ({
     // store scatter data values
     const scatterData = new Map<
       Number,
-      Map<DashboardTargetType, Map<DashboardTargetVariableType, number>>
+      Map<DETargetType, Map<DashboardTargetVariableType, number>>
     >();
     // store all the unique ids
     const ids = new Array(...new Set(data.map((row) => row.ID)));
