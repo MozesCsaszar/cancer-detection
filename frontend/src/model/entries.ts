@@ -27,7 +27,11 @@ export const deNumericalVariables = [
 
 export type DENumericalVariablesType = (typeof deNumericalVariables)[number];
 
-export const deCategoricalVariables = ["sampleType", "stage", "target"];
+export const deCategoricalVariables = [
+  "sampleType",
+  "stage",
+  "target",
+] as const;
 
 export type DECategoricalVariablesType =
   (typeof deCategoricalVariables)[number];

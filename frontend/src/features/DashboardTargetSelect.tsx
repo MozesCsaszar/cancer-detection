@@ -32,7 +32,7 @@ const DashboardTargetSelect: FC<DashboardTargetSelectProps> = ({
   <Stack
     sx={{
       justifyContent: "center",
-      gap: "3rem",
+      gap: "1rem",
     }}
   >
     <Typography sx={{ textAlign: "center" }} variant="h5">
