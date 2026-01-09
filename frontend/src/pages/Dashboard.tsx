@@ -104,7 +104,7 @@ export const Dashboard: React.FC = () => {
               ></DashboardHistogram>
             </Box>
 
-            <Box sx={{ marginTop: "-4rem" }}>
+            <Box sx={{ marginTop: "-2rem" }}>
               <DashboardHistogram
                 data={data}
                 target={targetY}
