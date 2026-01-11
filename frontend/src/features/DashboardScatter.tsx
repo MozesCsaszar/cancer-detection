@@ -1,5 +1,5 @@
 import { useMemo, type FC } from "react";
-import type { DataEntry, DETargetType } from "../model/entries";
+import type { DataEntry, DETargetType } from "../domain/entries";
 import {
   VictoryChart,
   VictoryTheme,
@@ -11,7 +11,7 @@ import {
 import {
   deNumericalVariables,
   type DENumericalVariablesType,
-} from "../model/entries";
+} from "../domain/entries";
 import { startCase } from "lodash";
 
 type DashboardScatterProps = {

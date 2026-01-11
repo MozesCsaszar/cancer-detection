@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { type DataEntry } from "../model/entries";
+import { type DataEntry } from "../domain/entries";
 import API from "../api/csvAPI";
 
 export function useAsyncData() {

@@ -15,7 +15,7 @@ import { type Dispatch, type FC, type SetStateAction } from "react";
 import {
   deCategoricalVariables,
   deNumericalVariables,
-} from "../../model/entries";
+} from "../../domain/entries";
 
 const MAX_HIDDEN_LAYERS = 3;
 const MAX_NUMBER_NEURONS = 100;
@@ -23,6 +23,14 @@ const TRAINING_PARAMETER_LIMITS = {
   numberOfEpochs: {
     min: 1,
     max: 1000,
+  },
+  learningRate: {
+    min: 1e-10,
+    max: 0.1,
+  },
+  validationProportion: {
+    min: 0.1,
+    max: 0.9,
   },
 };
 
@@ -35,7 +43,7 @@ export type TrainingParamtersType = {
 
 export const allFields = [...deCategoricalVariables, ...deNumericalVariables];
 
-export type AllFieldsType = (typeof allFields)[number];
+export type DEAllFieldsType = (typeof allFields)[number];
 
 export type FeatureFieldsType = {
   [key in (typeof allFields)[number]]?: { name: string; isUsed: boolean };
@@ -43,7 +51,7 @@ export type FeatureFieldsType = {
 
 interface TrainingInputPanelProps {
   targetField: string;
-  setTargetField: Dispatch<SetStateAction<AllFieldsType>>;
+  setTargetField: Dispatch<SetStateAction<DEAllFieldsType>>;
   fields: FeatureFieldsType;
   setFields: Dispatch<SetStateAction<FeatureFieldsType>>;
   trainModel: () => void;
@@ -86,7 +94,7 @@ const TrainingInputPanel: FC<TrainingInputPanelProps> = ({
         }}
       >
         {/* Training Variables */}
-        <Stack>
+        <Stack sx={{ gap: "0.5rem" }}>
           <Typography
             sx={{ textAlign: "center", marginBottom: "1rem" }}
             variant="h5"
@@ -220,7 +228,9 @@ const TrainingInputPanel: FC<TrainingInputPanelProps> = ({
             <InputLabel id="target-label">Target Variable</InputLabel>
             <Select
               labelId="target-label"
-              onChange={(e) => setTargetField(e.target.value as AllFieldsType)}
+              onChange={(e) =>
+                setTargetField(e.target.value as DEAllFieldsType)
+              }
               value={targetField}
               label="Target Variable"
             >

@@ -1,15 +1,23 @@
 import React, { useCallback, useContext, useState } from "react";
+import { flushSync } from "react-dom";
 import { Box, Stack, Typography } from "@mui/material";
-import { DataContext } from "../model/contexts";
+import { DataContext } from "../domain/contexts";
 import TrainingInputPanel, {
   allFields,
+  type DEAllFieldsType,
   type FeatureFieldsType,
   type TrainingParamtersType,
 } from "../features/AICenter/TrainingInputPanel";
+import {
+  initStatistics,
+  trainNNModel,
+  type TrainingStatistics,
+} from "../domain/aiModel";
+import StatisticsLineplot from "../features/AICenter/StatisticsLineplot";
+import { deCategoricalVariables } from "../domain/entries";
 
 export const AICenter: React.FC = () => {
   const [targetField, setTargetField] = useState(allFields[0]);
-
   const [fields, setFields] = useState<FeatureFieldsType>(
     Object.fromEntries(
       // take out the target field from selections
@@ -30,24 +38,58 @@ export const AICenter: React.FC = () => {
   const [trainingParameters, setTrainingParamters] =
     useState<TrainingParamtersType>({
       numberOfEpochs: { draft: 10, value: 10 },
+      learningRate: { draft: 1e-4, value: 1e-4 },
+      validationProportion: { draft: 0.2, value: 0.2 },
     });
 
   const data = useContext(DataContext);
 
+  const [statistics, setStatistics] = useState<TrainingStatistics>(
+    initStatistics("categorical")
+  );
+
   const trainModel = useCallback(() => {
-    setIsModelTraining(true);
+    flushSync(() => {
+      setIsModelTraining(true);
 
-    console.log(trainingParameters);
-    console.log(hiddenLayers);
-    console.log(targetField);
-    console.log(fields);
+      // set the statistics
+      setStatistics(
+        initStatistics(
+          (deCategoricalVariables as readonly string[]).includes(targetField)
+            ? "categorical"
+            : "numerical"
+        )
+      );
+    });
 
-    // PLACEHOLDER FOR MODEL TRAINING
-    setTimeout(() => {
+    trainNNModel(
+      data,
+      {
+        // training parameters
+        nrEpochs: trainingParameters.numberOfEpochs.value,
+        validationProportion: trainingParameters.validationProportion.value,
+        learningRate: trainingParameters.learningRate.value,
+        // layers
+        hiddenLayers,
+        // fields
+        featureFields: Object.entries(fields)
+          .filter(([key, value]) => value.isUsed && key !== targetField)
+          .map(([key, _]) => key) as DEAllFieldsType[],
+        targetField,
+      },
+      setStatistics
+    ).then((res) => {
       setIsModelTraining(false);
       setIsModelTrained(true);
-    }, 1000);
-  }, [data, trainingParameters, hiddenLayers, targetField, fields]);
+    });
+  }, [data, trainingParameters, hiddenLayers, targetField, fields, statistics]);
+
+  const statisticsParams = {
+    metric: statistics.type === "categorical" ? "Accuracy" : "R-Squared",
+    values: statistics.type === "categorical" ? statistics.acc : statistics.r2,
+    validationValues:
+      statistics.type === "categorical" ? statistics.valAcc : statistics.valR2,
+  };
 
   return (
     <Box sx={{ display: "flex", flex: 1, height: "100%" }}>
@@ -65,13 +107,36 @@ export const AICenter: React.FC = () => {
         setTrainingParameters={setTrainingParamters}
       ></TrainingInputPanel>
       {/* Statistics */}
-      <Stack sx={{ flex: 2, justifyContent: "center", alignItems: "center" }}>
-        {isModelTraining ? (
-          <Typography sx={{ textAlign: "center" }} variant="h5">
-            Please wait while the model is being trained...
-          </Typography>
-        ) : isModelTrained ? (
-          <>Statistics</>
+      <Stack
+        sx={{
+          flex: 2,
+          height: "90vh",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: 0,
+          alignSelf: "center",
+          marginTop: "-4vh",
+        }}
+      >
+        {isModelTraining || isModelTrained ? (
+          <>
+            <Box sx={{ flex: 1 }}>
+              <StatisticsLineplot
+                metric="Loss"
+                values={statistics.loss}
+                validationValues={statistics.valLoss}
+                clampY={false}
+              ></StatisticsLineplot>
+            </Box>
+            <Box sx={{ flex: 1 }}>
+              <StatisticsLineplot
+                metric={statisticsParams.metric}
+                values={statisticsParams.values}
+                validationValues={statisticsParams.validationValues}
+                clampY={statistics.type === "numerical"}
+              ></StatisticsLineplot>
+            </Box>
+          </>
         ) : (
           <Typography
             sx={{

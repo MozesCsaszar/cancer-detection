@@ -7,7 +7,7 @@ import { Home } from "./pages/Home";
 import { Dashboard } from "./pages/Dashboard";
 import { useAsyncData } from "./hooks/useAsyncData";
 import LoadingScreen from "./features/LoadingScreen/LoadingScreen";
-import { DataContext } from "./model/contexts";
+import { DataContext } from "./domain/contexts";
 import { AICenter } from "./pages/AICenter";
 
 function App() {

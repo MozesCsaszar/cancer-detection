@@ -3,7 +3,7 @@ import { useState, type Dispatch, type SetStateAction } from "react";
 import type {
   DETargetType,
   DENumericalVariablesType,
-} from "../model/dashboard";
+} from "../domain/dashboard";
 
 export function useSelectTarget(
   defaultTarget: DETargetType = "B2M"

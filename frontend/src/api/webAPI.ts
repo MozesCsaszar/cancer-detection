@@ -3,7 +3,7 @@ import {
   type DESampleType,
   type DEStageType,
   type DETargetType,
-} from "../model/entries";
+} from "../domain/entries";
 import axios from "axios";
 
 type ResponseDataEntry = {
@@ -57,10 +57,5 @@ class API {
     });
   }
 }
-
-// TODO: Talk about type discrepancies:
-//  - no sampleType (Patient, Control)
-//  - no stage (Early, Late, -)
-//  - targets don't match (CSV: B2M, TP53, Ours: B2M, PVT1)
 
 export default new API();

@@ -6,7 +6,7 @@ import DashboardScatter from "../features/DashboardScatter";
 import { useSelectTarget } from "../hooks/useSelectTarget";
 import DashboardBoxplot from "../features/DashboardBoxplot";
 import DashboardTargetSelect from "../features/DashboardTargetSelect";
-import { DataContext } from "../model/contexts";
+import { DataContext } from "../domain/contexts";
 
 export const Dashboard: React.FC = () => {
   const data = useContext(DataContext);

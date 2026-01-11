@@ -21,7 +21,7 @@ import {
   type SortingState,
 } from "@tanstack/react-table";
 import { startCase } from "lodash";
-import type { DataEntry } from "../model/entries";
+import type { DataEntry } from "../domain/entries";
 
 interface DataTableProps {
   data: DataEntry[];

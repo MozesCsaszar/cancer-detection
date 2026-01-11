@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import type { DataEntry } from "../model/entries";
+import type { DataEntry } from "../domain/entries";
 import {
   VictoryChart,
   VictoryTheme,
@@ -8,7 +8,7 @@ import {
   VictoryAxis,
 } from "victory";
 import { startCase } from "lodash";
-import type { DETargetType, DENumericalVariablesType } from "../model/entries";
+import type { DETargetType, DENumericalVariablesType } from "../domain/entries";
 
 type DashboardBoxplotProps = {
   data: DataEntry[];

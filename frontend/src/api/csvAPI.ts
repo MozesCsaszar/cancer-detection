@@ -1,5 +1,5 @@
 import Papa from "papaparse";
-import { type DataEntry } from "../model/entries";
+import { type DataEntry } from "../domain/entries";
 
 class API {
   async getData(): Promise<[DataEntry[], string]> {

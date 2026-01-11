@@ -12,7 +12,7 @@ import {
   deNumericalVariables,
   type DETargetType,
   type DENumericalVariablesType,
-} from "../model/entries";
+} from "../domain/entries";
 
 interface DashboardTargetSelectProps {
   title: string;
