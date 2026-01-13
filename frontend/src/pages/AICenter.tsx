@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useState } from "react";
 import { flushSync } from "react-dom";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { DataContext } from "../domain/contexts";
 import TrainingInputPanel, {
   allFields,
@@ -10,11 +10,13 @@ import TrainingInputPanel, {
 } from "../features/AICenter/TrainingInputPanel";
 import {
   initStatistics,
+  type TrainModelResult,
   trainNNModel,
   type TrainingStatistics,
 } from "../domain/aiModel";
-import StatisticsLineplot from "../features/AICenter/StatisticsLineplot";
 import { deCategoricalVariables } from "../domain/entries";
+import StatisticsPanel from "../features/AICenter/StatisticsPanel";
+import PredictionPanel from "../features/AICenter/PredictionPanel";
 
 export const AICenter: React.FC = () => {
   const [targetField, setTargetField] = useState(allFields[0]);
@@ -31,11 +33,10 @@ export const AICenter: React.FC = () => {
     )
   );
 
-  const [isModelTrained, setIsModelTrained] = useState(false);
   const [isModelTraining, setIsModelTraining] = useState(false);
 
   const [hiddenLayers, setHiddenLayers] = useState<number[]>([10]);
-  const [trainingParameters, setTrainingParamters] =
+  const [trainingParameters, setTrainingParameters] =
     useState<TrainingParamtersType>({
       numberOfEpochs: { draft: 10, value: 10 },
       learningRate: { draft: 1e-4, value: 1e-4 },
@@ -48,7 +49,11 @@ export const AICenter: React.FC = () => {
     initStatistics("categorical")
   );
 
-  const trainModel = useCallback(() => {
+  const [trainingResult, setTrainingResult] = useState<TrainModelResult | null>(
+    null
+  );
+
+  const trainModel = useCallback(async () => {
     flushSync(() => {
       setIsModelTraining(true);
 
@@ -80,16 +85,9 @@ export const AICenter: React.FC = () => {
       setStatistics
     ).then((res) => {
       setIsModelTraining(false);
-      setIsModelTrained(true);
+      setTrainingResult(res);
     });
   }, [data, trainingParameters, hiddenLayers, targetField, fields, statistics]);
-
-  const statisticsParams = {
-    metric: statistics.type === "categorical" ? "Accuracy" : "R-Squared",
-    values: statistics.type === "categorical" ? statistics.acc : statistics.r2,
-    validationValues:
-      statistics.type === "categorical" ? statistics.valAcc : statistics.valR2,
-  };
 
   return (
     <Box sx={{ display: "flex", flex: 1, height: "100%" }}>
@@ -104,7 +102,7 @@ export const AICenter: React.FC = () => {
         hiddenLayers={hiddenLayers}
         setHiddenLayers={setHiddenLayers}
         trainingParameters={trainingParameters}
-        setTrainingParameters={setTrainingParamters}
+        setTrainingParameters={setTrainingParameters}
       ></TrainingInputPanel>
       {/* Statistics */}
       <Stack
@@ -118,49 +116,18 @@ export const AICenter: React.FC = () => {
           marginTop: "-4vh",
         }}
       >
-        {isModelTraining || isModelTrained ? (
-          <>
-            <Box sx={{ flex: 1 }}>
-              <StatisticsLineplot
-                metric="Loss"
-                values={statistics.loss}
-                validationValues={statistics.valLoss}
-                clampY={false}
-              ></StatisticsLineplot>
-            </Box>
-            <Box sx={{ flex: 1 }}>
-              <StatisticsLineplot
-                metric={statisticsParams.metric}
-                values={statisticsParams.values}
-                validationValues={statisticsParams.validationValues}
-                clampY={statistics.type === "numerical"}
-              ></StatisticsLineplot>
-            </Box>
-          </>
-        ) : (
-          <Typography
-            sx={{
-              textAlign: "center",
-            }}
-            variant="h5"
-          >
-            Please train a model to see training statistics.
-          </Typography>
-        )}
+        <StatisticsPanel
+          isModelTrained={!!trainingResult}
+          isModelTraining={isModelTraining}
+          statistics={statistics}
+        ></StatisticsPanel>
       </Stack>
       {/* Predict */}
       <Stack sx={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        {isModelTraining ? (
-          <Typography sx={{ textAlign: "center" }} variant="h5">
-            Please wait while the model is being trained...
-          </Typography>
-        ) : isModelTrained ? (
-          <>Prediction</>
-        ) : (
-          <Typography sx={{ textAlign: "center" }} variant="h5">
-            Please train a model to make predictions.
-          </Typography>
-        )}
+        <PredictionPanel
+          isModelTrained={!!trainingResult}
+          isModelTraining={isModelTraining}
+        ></PredictionPanel>
       </Stack>
     </Box>
   );
