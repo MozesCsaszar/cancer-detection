@@ -2,7 +2,8 @@ import Papa from "papaparse";
 import { type DataEntry } from "../domain/entries";
 import { shuffle, chunk } from "lodash";
 
-let nrEntries = 25;
+let nrEntries = 50;
+let data: DataEntry[] = [];
 
 class API {
   async getData(): Promise<[DataEntry[], string]> {
@@ -14,18 +15,15 @@ class API {
         dynamicTyping: true,
         transform: (value) => value || "None",
         complete: (results) => {
-          if (Math.random() < 1) {
-            nrEntries++;
+          if (data.length === 0) {
+            data = shuffle(chunk(results.data, 2)).flat();
           }
 
-          const shuffledData = shuffle(chunk(results.data, 2));
+          if (Math.random() < 1) {
+            nrEntries += 2;
+          }
 
-          resolve([
-            shuffledData
-              .splice(0, Math.min(nrEntries, shuffledData.length - 1))
-              .flat(),
-            "",
-          ]);
+          resolve([data.slice(0, Math.min(nrEntries, data.length - 2)), ""]);
         },
         error: (err) => {
           resolve([[], err.message]);
