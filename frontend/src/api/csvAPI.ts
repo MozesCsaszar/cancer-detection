@@ -13,7 +13,6 @@ class API {
         header: true,
         skipEmptyLines: true,
         dynamicTyping: true,
-        transform: (value) => value || "None",
         complete: (results) => {
           if (data.length === 0) {
             data = shuffle(chunk(results.data, 2)).flat();
