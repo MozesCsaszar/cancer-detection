@@ -1,5 +1,9 @@
 import { type FC } from "react";
-import type { DataEntry } from "../domain/entries";
+import type {
+  DataEntry,
+  DETargetType,
+  DENumericalVariablesType,
+} from "../domain/entries";
 import {
   VictoryChart,
   VictoryTheme,
@@ -8,7 +12,6 @@ import {
   VictoryAxis,
 } from "victory";
 import { startCase } from "lodash";
-import type { DETargetType, DENumericalVariablesType } from "../domain/entries";
 
 type DashboardBoxplotProps = {
   data: DataEntry[];
@@ -47,13 +50,6 @@ const DashboardBoxplot: FC<DashboardBoxplotProps> = ({
     },
   ];
 
-  // const minValue = Math.min(
-  //   Math.min(...boxValues[0].y),
-  //   Math.min(...boxValues[1].y)
-  // );
-
-  // const minExponent = Math.log10(minValue);
-
   return (
     <VictoryChart
       scale={{ y: "log" }}
@@ -77,7 +73,7 @@ const DashboardBoxplot: FC<DashboardBoxplotProps> = ({
         axisLabelComponent={<VictoryLabel dx={0}></VictoryLabel>}
       ></VictoryAxis>
       {/* Plot */}
-      // @ts-expect-error: this works just fine
+      {/* @ts-expect-error: this works just fine */}
       <VictoryBoxPlot
         boxWidth={70}
         minLabels={({ datum }) => Math.round(datum._min)}

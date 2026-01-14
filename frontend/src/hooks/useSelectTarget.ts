@@ -1,9 +1,6 @@
 // src/hooks/useCsvData.ts
 import { useState, type Dispatch, type SetStateAction } from "react";
-import type {
-  DETargetType,
-  DENumericalVariablesType,
-} from "../domain/dashboard";
+import type { DENumericalVariablesType, DETargetType } from "../domain/entries";
 
 export function useSelectTarget(
   defaultTarget: DETargetType = "B2M"

@@ -11,19 +11,20 @@ function createOneHotArray(index: number, size: number): number[] {
   return Array.from({ length: size }, (_, i) => (i === index ? 1 : 0));
 }
 
-function oneHotEncode(
+export function oneHotEncode(value: string, mapping: string[]) {
+  const index = mapping.indexOf(value);
+  return createOneHotArray(index, mapping.length);
+}
+
+function oneHotEncodeArray(
   data: DataEntry[],
   field: DECategoricalVariablesType
 ): { values: number[][]; mapping: string[] } {
-  const categoryValues = getPossibleValues(data, field);
-  const values = data
-    .map((entry) => entry[field])
-    .map((entry) => categoryValues.indexOf(entry));
+  const mapping = getPossibleValues(data, field);
+  const values = data.map((entry) => entry[field]);
   return {
-    values: values.map((entry) =>
-      createOneHotArray(entry, categoryValues.length)
-    ),
-    mapping: categoryValues,
+    values: values.map((entry) => oneHotEncode(entry, mapping)),
+    mapping,
   };
 }
 
@@ -41,7 +42,15 @@ export function splitData(data: any[], validationProportion: number) {
   };
 }
 
-function normalize(
+export function normalize(value: number, min: number, max: number) {
+  if (max === min) {
+    return 0;
+  }
+
+  return (value - min) / (max - min);
+}
+
+function normalizeArray(
   data: DataEntry[],
   field: DENumericalVariablesType,
   validationProportion: number
@@ -64,6 +73,8 @@ export type PreparedFieldType =
   | {
       values: number[];
       type: "numerical";
+      min: number;
+      max: number;
     }
   | {
       values: number[][];
@@ -78,12 +89,12 @@ function prepareField(
 ): PreparedFieldType {
   if ((deCategoricalVariables as unknown as string[]).includes(fieldName)) {
     return {
-      ...oneHotEncode(data, fieldName as DECategoricalVariablesType),
+      ...oneHotEncodeArray(data, fieldName as DECategoricalVariablesType),
       type: "categorical",
     };
   } else {
     return {
-      ...normalize(
+      ...normalizeArray(
         data,
         fieldName as DENumericalVariablesType,
         validationProportion
@@ -109,7 +120,8 @@ function prepareTargetField(
       mapping: categories,
       values:
         categories.length > 2
-          ? oneHotEncode(data, fieldName as DECategoricalVariablesType).values
+          ? oneHotEncodeArray(data, fieldName as DECategoricalVariablesType)
+              .values
           : // binary classification case
             data.map((entry) => [
               categories.indexOf(entry[fieldName] as string),
@@ -135,7 +147,6 @@ export function prepareData(
   // prepare the data
   const preparedData = new Map<string, PreparedFieldType>();
 
-  // TODO: Shuffle data
   const dataCopy = data.map((entry) => ({ ...entry }));
   const shuffledData = shuffle(dataCopy);
 

@@ -1,5 +1,9 @@
 import { type FC } from "react";
-import type { DataEntry } from "../domain/entries";
+import type {
+  DataEntry,
+  DETargetType,
+  DENumericalVariablesType,
+} from "../domain/entries";
 import {
   VictoryChart,
   VictoryTheme,
@@ -7,7 +11,6 @@ import {
   VictoryLabel,
   VictoryAxis,
 } from "victory";
-import type { DETargetType, DENumericalVariablesType } from "../domain/entries";
 import { startCase } from "lodash";
 
 type DashboardHistogramProps = {

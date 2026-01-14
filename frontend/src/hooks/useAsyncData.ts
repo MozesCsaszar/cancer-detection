@@ -26,7 +26,5 @@ export function useAsyncData() {
       });
   }, []);
 
-  // console.log(data);
-
   return { data, loading, error };
 }

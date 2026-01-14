@@ -38,9 +38,9 @@ export const AICenter: React.FC = () => {
   const [hiddenLayers, setHiddenLayers] = useState<number[]>([10]);
   const [trainingParameters, setTrainingParameters] =
     useState<TrainingParamtersType>({
-      numberOfEpochs: { draft: 10, value: 10 },
-      learningRate: { draft: 1e-4, value: 1e-4 },
-      validationProportion: { draft: 0.2, value: 0.2 },
+      numberOfEpochs: 10,
+      learningRate: 1e-4,
+      validationProportion: 0.2,
     });
 
   const data = useContext(DataContext);
@@ -71,9 +71,9 @@ export const AICenter: React.FC = () => {
       data,
       {
         // training parameters
-        nrEpochs: trainingParameters.numberOfEpochs.value,
-        validationProportion: trainingParameters.validationProportion.value,
-        learningRate: trainingParameters.learningRate.value,
+        nrEpochs: trainingParameters.numberOfEpochs,
+        validationProportion: trainingParameters.validationProportion,
+        learningRate: trainingParameters.learningRate,
         // layers
         hiddenLayers,
         // fields
@@ -125,8 +125,8 @@ export const AICenter: React.FC = () => {
       {/* Predict */}
       <Stack sx={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <PredictionPanel
-          isModelTrained={!!trainingResult}
           isModelTraining={isModelTraining}
+          trainingResult={trainingResult}
         ></PredictionPanel>
       </Stack>
     </Box>

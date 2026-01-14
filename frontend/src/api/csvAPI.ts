@@ -9,6 +9,7 @@ class API {
         header: true,
         skipEmptyLines: true,
         dynamicTyping: true,
+        transform: (value) => value || "None",
         complete: (results) => {
           resolve([results.data, ""]);
         },

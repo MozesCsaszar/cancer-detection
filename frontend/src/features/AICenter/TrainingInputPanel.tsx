@@ -1,21 +1,12 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Checkbox, Stack, Typography } from "@mui/material";
 import { startCase } from "lodash";
 import { type Dispatch, type FC, type SetStateAction } from "react";
 import {
   deCategoricalVariables,
   deNumericalVariables,
 } from "../../domain/entries";
+import NumericInput from "../components/NumericInput";
+import DropdownInput from "../components/DropdownInput";
 
 const MAX_HIDDEN_LAYERS = 3;
 const MAX_NUMBER_NEURONS = 100;
@@ -35,10 +26,7 @@ const TRAINING_PARAMETER_LIMITS = {
 };
 
 export type TrainingParamtersType = {
-  [name in keyof typeof TRAINING_PARAMETER_LIMITS]: {
-    draft: number;
-    value: number;
-  };
+  [name in keyof typeof TRAINING_PARAMETER_LIMITS]: number;
 };
 
 export const allFields = [...deCategoricalVariables, ...deNumericalVariables];
@@ -104,59 +92,23 @@ const TrainingInputPanel: FC<TrainingInputPanelProps> = ({
 
           {Object.entries(TRAINING_PARAMETER_LIMITS).map(
             ([parameterKey, parameterLimits]) => (
-              <TextField
-                key={parameterKey}
-                label={startCase(parameterKey)}
+              <NumericInput
                 value={
                   trainingParameters[
                     parameterKey as keyof TrainingParamtersType
-                  ].draft
+                  ]
                 }
-                onChange={(event) => {
-                  const value = Number(event.target.value);
-                  setTrainingParameters({
-                    ...trainingParameters,
-                    [parameterKey]: {
-                      draft: value,
-                      value:
-                        trainingParameters[
-                          parameterKey as keyof TrainingParamtersType
-                        ].value,
-                    },
-                  });
-                }}
-                onBlur={() => {
-                  const draft =
-                    trainingParameters[
-                      parameterKey as keyof TrainingParamtersType
-                    ].draft;
-
-                  const value =
-                    trainingParameters[
-                      parameterKey as keyof TrainingParamtersType
-                    ].value;
-                  if (
-                    draft >= parameterLimits.min &&
-                    draft <= parameterLimits.max
-                  ) {
-                    setTrainingParameters({
-                      ...trainingParameters,
-                      [parameterKey]: {
-                        draft: draft,
-                        value: draft,
-                      },
-                    });
-                  } else {
-                    setTrainingParameters({
-                      ...trainingParameters,
-                      [parameterKey]: {
-                        draft: value,
-                        value: value,
-                      },
-                    });
-                  }
-                }}
-              ></TextField>
+                setValue={(value) =>
+                  setTrainingParameters((prev) => ({
+                    ...prev,
+                    [parameterKey]: value,
+                  }))
+                }
+                label={parameterKey}
+                min={parameterLimits.min}
+                max={parameterLimits.max}
+                key={parameterKey}
+              ></NumericInput>
             )
           )}
         </Stack>
@@ -195,24 +147,23 @@ const TrainingInputPanel: FC<TrainingInputPanelProps> = ({
           </Box>
 
           {hiddenLayers.map((nrNeurons, index) => (
-            <TextField
-              key={index}
-              label={`Layer ${index + 1} Number of Neurons`}
+            <NumericInput
               value={nrNeurons}
-              onChange={(event) =>
+              setValue={(value) =>
                 setHiddenLayers(
                   hiddenLayers.map((nrNeurons, j) => {
                     if (j === index) {
-                      const value = Number(event.target.value);
-                      if (value > 0 && value <= MAX_NUMBER_NEURONS) {
-                        return value;
-                      }
+                      return value;
                     }
                     return nrNeurons;
                   })
                 )
               }
-            ></TextField>
+              label={`layer-${index + 1}-number-of-neurons`}
+              min={0}
+              max={MAX_NUMBER_NEURONS}
+              key={`layer-${index + 1}-number-of-neurons`}
+            ></NumericInput>
           ))}
         </Stack>
 
@@ -224,21 +175,12 @@ const TrainingInputPanel: FC<TrainingInputPanelProps> = ({
           >
             Select Target Variable
           </Typography>
-          <FormControl>
-            <InputLabel id="target-label">Target Variable</InputLabel>
-            <Select
-              labelId="target-label"
-              onChange={(e) =>
-                setTargetField(e.target.value as DEAllFieldsType)
-              }
-              value={targetField}
-              label="Target Variable"
-            >
-              {Object.values(fields).map((field) => (
-                <MenuItem value={field.name}>{startCase(field.name)}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <DropdownInput
+            value={targetField}
+            setValue={setTargetField as Dispatch<SetStateAction<string>>}
+            values={Object.values(fields).map((field) => field.name)}
+            label="target-variable"
+          ></DropdownInput>
         </Stack>
 
         {/* Feature Variables */}

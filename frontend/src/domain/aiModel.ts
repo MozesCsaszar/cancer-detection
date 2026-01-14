@@ -1,6 +1,8 @@
 import type { DEAllFieldsType } from "../features/AICenter/TrainingInputPanel";
 import * as tf from "@tensorflow/tfjs";
 import {
+  normalize,
+  oneHotEncode,
   prepareData,
   splitData,
   type PreparedDataType,
@@ -77,7 +79,6 @@ function createModel(
       ? "binaryCrossentropy"
       : "categoricalCrossentropy";
 
-  // const metrics = nrOutputs === 1 ? ["r2"] : ["accuracy"];
   const metrics = nrOutputs === 1 ? [r2] : ["accuracy"];
 
   model.compile({
@@ -85,9 +86,6 @@ function createModel(
     loss,
     metrics,
   });
-
-  console.log("CONFIG", config, nrInputs, nrOutputs, activation, loss, metrics);
-  console.log(model);
 
   return model;
 }
@@ -100,21 +98,30 @@ function calculateInputSize(featureFields: PreparedFieldType[]): number {
   return sum(featureFields.map(calculateFieldSize));
 }
 
-function extractCategoricalMappings(
-  preparedData: PreparedDataType,
-  targetField: DEAllFieldsType
-) {
-  const mappings = new Map<string, string[]>();
+type MappingFieldType =
+  | { type: "categorical"; mappings: string[] }
+  | { type: "numerical"; min: number; max: number };
+
+function getMappingValue(featureField: PreparedFieldType): MappingFieldType {
+  if (featureField.type === "categorical") {
+    return {
+      type: "categorical",
+      mappings: featureField.mapping,
+    };
+  }
+  return {
+    type: "numerical",
+    min: featureField.min,
+    max: featureField.max,
+  };
+}
+
+function extractMappings(preparedData: PreparedDataType) {
+  const mappings: Map<string, MappingFieldType> = new Map();
   Array.from(preparedData.featureFields.keys()).forEach((key) => {
     const featureField = preparedData.featureFields.get(key)!;
-    if (featureField.type === "categorical") {
-      mappings.set(key, featureField.mapping);
-    }
+    mappings.set(key, getMappingValue(featureField));
   });
-
-  if (preparedData.targetField.type === "categorical") {
-    mappings.set(targetField, preparedData.targetField.mapping);
-  }
 
   return mappings;
 }
@@ -123,7 +130,10 @@ export type TrainModelResult = {
   model: tf.Sequential;
   inputSize: number;
   outputSize: number;
-  mappings: Map<string, string[]>;
+  mappings: Map<string, MappingFieldType>;
+  targetMapping: MappingFieldType;
+  fields: string[];
+  target: string;
 };
 
 export type TrainingStatistics =
@@ -236,13 +246,11 @@ export function trainNNModel(
         batchSize: 16,
         validationData: [tf.tensor2d(xsVal), tf.tensor2d(ysVal)],
         callbacks: {
-          onEpochEnd: async (epoch, logs) => {
+          onEpochEnd: async (_, logs) => {
             if (!logs) return;
             setTrainingStatistics((prev) => {
               const obj = createStatistics(prev, logs);
-              if (epoch === config.nrEpochs - 1) {
-                console.log(obj);
-              }
+
               return obj;
             });
           },
@@ -253,11 +261,47 @@ export function trainNNModel(
           model,
           inputSize,
           outputSize,
-          mappings: extractCategoricalMappings(
-            preparedData,
-            config.targetField
-          ),
+          mappings: extractMappings(preparedData),
+          targetMapping: getMappingValue(preparedData.targetField),
+          fields: config.featureFields,
+          target: config.targetField,
         })
       );
   });
+}
+
+export async function predictWithNN(
+  inputs: { [key: string]: string },
+  trainingResult: TrainModelResult
+): Promise<string> {
+  const xs = trainingResult.fields.map((field) => {
+    const resultField = trainingResult.mappings.get(field)!;
+    if (resultField.type === "categorical") {
+      return oneHotEncode(inputs[field], resultField.mappings);
+    } else {
+      return normalize(Number(inputs[field]), resultField.min, resultField.max);
+    }
+  });
+
+  const ys = trainingResult.model.predict(tf.tensor2d([xs.flat()])) as
+    | tf.Tensor1D
+    | tf.Tensor2D;
+
+  const output = ys.arraySync()[0] as number[];
+
+  console.log(output);
+
+  if (trainingResult.targetMapping.type === "numerical") {
+    const value =
+      output[0] *
+        (trainingResult.targetMapping.max - trainingResult.targetMapping.min) +
+      trainingResult.targetMapping.min;
+    return value.toFixed(2);
+  } else {
+    if (trainingResult.targetMapping.mappings.length === 2) {
+      return trainingResult.targetMapping.mappings[Math.round(output[0])];
+    }
+    const maxIndex = output.indexOf(Math.max(...output));
+    return trainingResult.targetMapping.mappings[maxIndex];
+  }
 }

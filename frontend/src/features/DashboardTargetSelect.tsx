@@ -1,18 +1,11 @@
 import { type Dispatch, type FC, type SetStateAction } from "react";
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { startCase } from "lodash";
+import { Stack, Typography } from "@mui/material";
 import {
   deNumericalVariables,
   type DETargetType,
   type DENumericalVariablesType,
 } from "../domain/entries";
+import DropdownInput from "./components/DropdownInput";
 
 interface DashboardTargetSelectProps {
   title: string;
@@ -39,31 +32,19 @@ const DashboardTargetSelect: FC<DashboardTargetSelectProps> = ({
       {title}
     </Typography>
     <Stack sx={{ gap: "0.5rem" }}>
-      <FormControl>
-        <InputLabel id="target-value-label">Target Value</InputLabel>
-        <Select
-          labelId="target-value-label"
-          onChange={(e) => setTarget(e.target.value)}
-          value={target}
-          label="Target Value"
-        >
-          <MenuItem value="B2M">B2M</MenuItem>
-          <MenuItem value="TP53">TP53</MenuItem>
-        </Select>
-      </FormControl>
-      <FormControl>
-        <InputLabel id="target-variable-label">Target Variable</InputLabel>
-        <Select
-          labelId="target-variable-label"
-          onChange={(e) => setTargetVariable(e.target.value)}
-          value={targetVariable}
-          label="Target Variable"
-        >
-          {deNumericalVariables.map((variable) => (
-            <MenuItem value={variable}>{startCase(variable)}</MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <DropdownInput
+        value={target}
+        setValue={setTarget as Dispatch<SetStateAction<string>>}
+        values={["B2M", "TP53"]}
+        label="target-value"
+        useStartCase={false}
+      ></DropdownInput>
+      <DropdownInput
+        value={targetVariable}
+        setValue={setTargetVariable as Dispatch<SetStateAction<string>>}
+        values={deNumericalVariables as readonly string[]}
+        label="target-variable"
+      ></DropdownInput>
     </Stack>
   </Stack>
 );

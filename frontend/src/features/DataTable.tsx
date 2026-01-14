@@ -152,12 +152,16 @@ export const DataTable: React.FC<DataTableProps> = ({ data }) => {
           onPageChange={(_, newPage) => setPage(newPage)}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={(event) => {
-            setRowsPerPage(parseInt(event.target.value, 10));
+            setRowsPerPage(Number.parseInt(event.target.value, 10));
             setPage(0);
           }}
           rowsPerPageOptions={[10, 20, 30, 50]}
-          backIconButtonProps={{ style: { display: "none" } }}
-          nextIconButtonProps={{ style: { display: "none" } }}
+          slotProps={{
+            actions: {
+              previousButton: { style: { display: "none" } },
+              nextButton: { style: { display: "none" } },
+            },
+          }}
         />
 
         <Pagination
