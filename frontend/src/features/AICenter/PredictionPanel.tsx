@@ -33,7 +33,7 @@ const PredictionPanel: FC<PredictionPanelProps> = ({
     [key: string]: InputValueType;
   }>(
     Object.fromEntries(
-      Array.from(trainingResult?.mappings.entries() || []).map(
+      Array.from(trainingResult?.mappings.entries() ?? []).map(
         ([key, mapping]) => {
           if (mapping.type === "categorical") {
             const value =
