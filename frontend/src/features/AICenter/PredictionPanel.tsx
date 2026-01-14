@@ -63,6 +63,8 @@ const PredictionPanel: FC<PredictionPanelProps> = ({
   }>(createInputValues(trainingResult));
 
   useEffect(() => {
+    setPrediction(null);
+
     setInputValues(createInputValues(trainingResult));
   }, [trainingResult, setInputValues]);
 
