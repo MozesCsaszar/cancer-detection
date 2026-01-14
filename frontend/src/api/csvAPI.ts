@@ -23,6 +23,8 @@ class API {
             nrEntries += 2;
           }
 
+          console.log(data.slice(0, Math.min(nrEntries, data.length - 2)));
+
           resolve([data.slice(0, Math.min(nrEntries, data.length - 2)), ""]);
         },
         error: (err) => {

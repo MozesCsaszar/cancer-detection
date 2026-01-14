@@ -43,9 +43,9 @@ const DashboardBoxplot: FC<DashboardBoxplotProps> = ({
         .map((row) => row[targetVariable] + 1),
     },
     {
-      x: "Control",
+      x: "Healthy",
       y: data
-        .filter((row) => row.sampleType === "Control" && row.target === target)
+        .filter((row) => row.sampleType === "Healthy" && row.target === target)
         .map((row) => row[targetVariable] + 1),
     },
   ];
@@ -60,7 +60,7 @@ const DashboardBoxplot: FC<DashboardBoxplotProps> = ({
       <VictoryLabel
         text={`${target} ${startCase(
           targetVariable
-        )} Levels of ${boxOneStage} Stage Patients Vs Control`}
+        )} Levels of ${boxOneStage} Stage Patients Vs Healthy`}
         x={35}
         y={35}
       ></VictoryLabel>
