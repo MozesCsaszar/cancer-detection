@@ -7,12 +7,15 @@ const theme = createTheme({});
 import "./index.css";
 import App from "./App.tsx";
 import { BrowserRouter } from "react-router";
+import TrainContextProvider from "./features/components/TrainingResultProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-        <App />
+        <TrainContextProvider>
+          <App />
+        </TrainContextProvider>
       </BrowserRouter>
     </ThemeProvider>
   </StrictMode>

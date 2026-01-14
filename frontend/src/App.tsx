@@ -9,7 +9,6 @@ import { useAsyncData } from "./hooks/useAsyncData";
 import LoadingScreen from "./features/LoadingScreen/LoadingScreen";
 import { DataContext } from "./domain/contexts";
 import { AICenter } from "./pages/AICenter";
-
 function App() {
   const { data, loading, error } = useAsyncData();
 

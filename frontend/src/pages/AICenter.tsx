@@ -1,19 +1,14 @@
 import React, { useCallback, useContext, useState } from "react";
 import { flushSync } from "react-dom";
 import { Box, Stack } from "@mui/material";
-import { DataContext } from "../domain/contexts";
+import { DataContext, TrainModelResultContext } from "../domain/contexts";
 import TrainingInputPanel, {
   allFields,
   type DEAllFieldsType,
   type FeatureFieldsType,
   type TrainingParamtersType,
 } from "../features/AICenter/TrainingInputPanel";
-import {
-  initStatistics,
-  type TrainModelResult,
-  trainNNModel,
-  type TrainingStatistics,
-} from "../domain/aiModel";
+import { initStatistics, trainNNModel } from "../domain/aiModel";
 import { deCategoricalVariables } from "../domain/entries";
 import StatisticsPanel from "../features/AICenter/StatisticsPanel";
 import PredictionPanel from "../features/AICenter/PredictionPanel";
@@ -45,20 +40,15 @@ export const AICenter: React.FC = () => {
 
   const data = useContext(DataContext);
 
-  const [statistics, setStatistics] = useState<TrainingStatistics>(
-    initStatistics("categorical")
-  );
-
-  const [trainingResult, setTrainingResult] = useState<TrainModelResult | null>(
-    null
-  );
+  const { trainingResult, setTrainingResult, statistics, setStatistics } =
+    useContext(TrainModelResultContext);
 
   const trainModel = useCallback(async () => {
     flushSync(() => {
       setIsModelTraining(true);
 
       // set the statistics
-      setStatistics(
+      setStatistics?.(
         initStatistics(
           (deCategoricalVariables as readonly string[]).includes(targetField)
             ? "categorical"
@@ -82,12 +72,16 @@ export const AICenter: React.FC = () => {
           .map(([key, _]) => key) as DEAllFieldsType[],
         targetField,
       },
-      setStatistics
+      setStatistics!
     ).then((res) => {
       setIsModelTraining(false);
-      setTrainingResult(res);
+      setTrainingResult?.(res);
     });
   }, [data, trainingParameters, hiddenLayers, targetField, fields, statistics]);
+
+  if (!statistics) {
+    return;
+  }
 
   return (
     <Box sx={{ display: "flex", flex: 1, height: "100%" }}>

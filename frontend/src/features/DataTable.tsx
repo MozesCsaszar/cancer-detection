@@ -30,7 +30,7 @@ interface DataTableProps {
 export const DataTable: React.FC<DataTableProps> = ({ data }) => {
   // Sorting state
   const [sorting, setSorting] = useState<SortingState>([
-    { id: "ID", desc: false },
+    // { id: "ID", desc: false },
   ]);
 
   // Pagination state

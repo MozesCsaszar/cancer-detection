@@ -25,7 +25,7 @@ const StatisticsPanel: FC<StatisticsPanelProps> = ({
     <>
       {isModelTraining || isModelTrained ? (
         <>
-          <Box sx={{ flex: 1 }}>
+          <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
             <StatisticsLineplot
               metric="Loss"
               values={statistics.loss}
@@ -33,7 +33,7 @@ const StatisticsPanel: FC<StatisticsPanelProps> = ({
               clampY={false}
             ></StatisticsLineplot>
           </Box>
-          <Box sx={{ flex: 1 }}>
+          <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
             <StatisticsLineplot
               metric={statisticsParams.metric}
               values={statisticsParams.values}

@@ -1,5 +1,5 @@
 import { Button, Stack, Typography } from "@mui/material";
-import { useState, type FC } from "react";
+import { useEffect, useState, type FC } from "react";
 import { predictWithNN, type TrainModelResult } from "../../domain/aiModel";
 import { startCase } from "lodash";
 import DropdownInput from "../components/DropdownInput";
@@ -8,6 +8,35 @@ import NumericInput from "../components/NumericInput";
 interface PredictionPanelProps {
   isModelTraining: boolean;
   trainingResult: TrainModelResult | null;
+}
+
+function createInputValues(trainingResult: TrainModelResult | null) {
+  return Object.fromEntries(
+    Array.from(trainingResult?.mappings.entries() ?? []).map(
+      ([key, mapping]) => {
+        if (mapping.type === "categorical") {
+          const value =
+            mapping.mappings[
+              Math.floor(Math.random() * mapping.mappings.length)
+            ];
+          return [key, { ...mapping, value }];
+        }
+
+        const value =
+          Math.round(
+            (mapping.min + Math.random() * (mapping.max - mapping.min)) * 100
+          ) / 100;
+
+        return [
+          key,
+          {
+            ...mapping,
+            value,
+          },
+        ];
+      }
+    )
+  );
 }
 
 type InputValueType =
@@ -31,34 +60,11 @@ const PredictionPanel: FC<PredictionPanelProps> = ({
 
   const [inputValues, setInputValues] = useState<{
     [key: string]: InputValueType;
-  }>(
-    Object.fromEntries(
-      Array.from(trainingResult?.mappings.entries() ?? []).map(
-        ([key, mapping]) => {
-          if (mapping.type === "categorical") {
-            const value =
-              mapping.mappings[
-                Math.floor(Math.random() * mapping.mappings.length)
-              ];
-            return [key, { ...mapping, value }];
-          }
+  }>(createInputValues(trainingResult));
 
-          const value =
-            Math.round(
-              (mapping.min + Math.random() * (mapping.max - mapping.min)) * 100
-            ) / 100;
-
-          return [
-            key,
-            {
-              ...mapping,
-              value,
-            },
-          ];
-        }
-      )
-    )
-  );
+  useEffect(() => {
+    setInputValues(createInputValues(trainingResult));
+  }, [trainingResult, setInputValues]);
 
   if (isModelTraining) {
     return (

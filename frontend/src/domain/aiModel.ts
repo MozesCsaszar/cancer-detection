@@ -289,8 +289,6 @@ export async function predictWithNN(
 
   const output = ys.arraySync()[0] as number[];
 
-  console.log(output);
-
   if (trainingResult.targetMapping.type === "numerical") {
     const value =
       output[0] *
