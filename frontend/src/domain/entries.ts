@@ -1,4 +1,4 @@
-export type DESampleType = "Patient" | "Healthy";
+export type DESampleType = "Patient" | "Control";
 export type DEStageType = "Early" | "Late" | "None";
 export type DETargetType = "B2M" | "TP53";
 
