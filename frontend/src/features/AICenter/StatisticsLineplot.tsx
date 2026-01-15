@@ -96,22 +96,6 @@ const StatisticsLineplot: FC<StatisticsLineplotProps> = ({
           { name: `Validation ${metric}`, symbol: { fill: colors[1] } },
         ]}
       />
-      {/* Horizontal rulers */}
-      <VictoryLine
-        data={[
-          { x: 1, y: values[0] },
-          { x: values.length, y: values.at(-1) },
-        ]}
-        labels={[`${values.at(-1)!.toFixed(2)}`]}
-        labelComponent={
-          <VictoryLabel
-            dx={6}
-            dy={-4}
-            textAnchor="start"
-            style={{ fontSize: 10, fill: "#666" }}
-          />
-        }
-      />
 
       {/* Data lines */}
       <VictoryLine
