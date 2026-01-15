@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { type DataEntry } from "../domain/entries";
-import API from "../api/csvAPI";
+import API from "../api/webAPI";
 
 function doesDataMatch(oldData: DataEntry[], newData: DataEntry[]) {
   if (oldData.length === 0) {
@@ -30,13 +30,14 @@ export function useAsyncData() {
         .then(([respData, error]) => {
           if (error === "") {
             const dataMatches = doesDataMatch(data, respData);
-            console.log(dataMatches, data.length, respData.length);
+
             if (!dataMatches) {
               setData(respData);
             }
           } else {
             setError(error);
           }
+
           setLoading(false);
         })
         // Catch the unknown error and console log it

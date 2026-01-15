@@ -30,6 +30,7 @@ const StatisticsLineplot: FC<StatisticsLineplotProps> = ({
   if (values.length === 0) {
     return <Typography variant="h5">Chart loading...</Typography>;
   }
+
   const data = [
     values.map((value, index) => ({
       x: index + 1,
@@ -51,8 +52,8 @@ const StatisticsLineplot: FC<StatisticsLineplotProps> = ({
     Math.max(...data[1].map((e) => e.y))
   );
 
-  const min = minY - 0.2 * maxY;
-  const max = maxY + 0.1 * maxY;
+  const min = minY - Math.abs(0.2 * maxY);
+  const max = Math.max(0.001, maxY + Math.abs(0.1 * maxY));
 
   const domainRange = max - min;
 
@@ -95,6 +96,24 @@ const StatisticsLineplot: FC<StatisticsLineplotProps> = ({
           { name: `Validation ${metric}`, symbol: { fill: colors[1] } },
         ]}
       />
+      {/* Horizontal rulers */}
+      <VictoryLine
+        data={[
+          { x: 1, y: values[0] },
+          { x: values.length, y: values.at(-1) },
+        ]}
+        labels={[`${values.at(-1)!.toFixed(2)}`]}
+        labelComponent={
+          <VictoryLabel
+            dx={6}
+            dy={-4}
+            textAnchor="start"
+            style={{ fontSize: 10, fill: "#666" }}
+          />
+        }
+      />
+
+      {/* Data lines */}
       <VictoryLine
         data={data[0]}
         style={{ data: { stroke: colors[0] } }}
