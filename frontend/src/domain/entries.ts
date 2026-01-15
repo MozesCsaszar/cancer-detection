@@ -1,5 +1,5 @@
 export type DESampleType = "Patient" | "Control";
-export type DEStageType = "Early" | "Late" | "None";
+export type DEStageType = "Early" | "Late" | "Healthy";
 export type DETargetType = "B2M" | "TP53";
 
 export type DataEntry = {

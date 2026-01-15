@@ -32,7 +32,7 @@ class API {
     return new Promise((resolve, _) => {
       axios
         .get<ResponseDataEntry[]>(
-          "https://pcr-machine-reading-api-erecdybmfrdfhmhy.westeurope-01.azurewebsites.net/api/pcr-readings",
+          "https://pcr-machine-reading-api-erecdybmfrdfhmhy.westeurope-01.azurewebsites.net/api/pcr-readings?limit=1000",
           {}
         )
         .then((resp) =>
@@ -41,7 +41,9 @@ class API {
               index: Number(entry.index),
               ID: Number(entry.ID),
               sampleType: entry.sampleType as DESampleType,
-              stage: entry.stage as DEStageType,
+              stage: (entry.stage === "Healty"
+                ? "Healthy"
+                : entry.stage) as DEStageType,
               target: entry.target as DETargetType,
               concentration: entry.concentration,
               CI: entry.CI,
